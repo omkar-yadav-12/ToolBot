@@ -1,4 +1,5 @@
 import speech_recognition as sr
+from difflib import SequenceMatcher
 
 #idk this might be helpful
 #https://stackoverflow.com/questions/25394329/python-voice-recognition-library-always-listen
@@ -40,11 +41,14 @@ def main():
             audio = r.listen(source)
             print("End")
 
+            trigger_word = "toolbox"
+
             try:
                 text = r.recognize_google(audio).upper()
                 trigger_text = "HEY TOOLBOT"
                 print(text)
-                if (text == trigger_text):
+                
+                if (trigger_word.lower() in text.lower()):
                     activate_toolbot()
 
             except sr.UnknownValueError:
