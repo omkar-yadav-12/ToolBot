@@ -8,12 +8,14 @@ from difflib import SequenceMatcher
 tools = ["HAMMER", "WRENCH", "SCREWDRIVER", "DRILL"]
 r = sr.Recognizer()
 r.energy_threshold = 250
+activated = False
 
 def activate_toolbot():
     print("Toolbot activated")
+    activated = True
     #some function to activate lights and play a sound on RPi
     
-    with sr.Microphone(3) as source:
+    with sr.Microphone() as source:
         tool_requested = r.listen(source)
 
         try:
@@ -29,14 +31,14 @@ def activate_toolbot():
 
 def get_tool(tool):
     print("Getting " + tool)
-    print(tool + " in row " + tools.index(tool))
+    print(tool + " in row " + str(tools.index(tool)))
     #actually get the tool
 
 def main():
     with sr.Microphone() as source:
         # r.adjust_for_ambient_noise(source)
 
-        while True:
+        while activated == False:
             print("Start")
             audio = r.listen(source)
             print("End")
