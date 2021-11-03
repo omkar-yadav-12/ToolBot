@@ -12,16 +12,19 @@ activated = False
 
 def activate_toolbot():
     print("Toolbot activated")
-    activated = True
+    #activated = True
     #some function to activate lights and play a sound on RPi
     
     with sr.Microphone() as source:
+        print("Listening for tool")
         tool_requested = r.listen(source)
-
+        print("End")
         try:
-            tool = r.recognize_google(tool_requested).upper()
-            if tool in tools:
-                get_tool(tool)
+            sentence = r.recognize_google(tool_requested).upper()
+            print(sentence)
+            for t in tools:
+                if t in sentence:
+                    get_tool(t)
 
         except sr.UnknownValueError:
             print("Google Speech Recognition could not understand audio")
@@ -38,7 +41,7 @@ def main():
     with sr.Microphone() as source:
         # r.adjust_for_ambient_noise(source)
 
-        while activated == False:
+        while True:
             print("Start")
             audio = r.listen(source)
             print("End")
