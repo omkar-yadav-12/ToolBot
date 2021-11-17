@@ -30,7 +30,12 @@ def activate_toolbot():
         
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
-
+def checkForTool(s):
+    for t in tools:
+        if t in s.upper():
+            get_tool(t)
+            return -1
+    return 0
 def get_tool(tool):
     print("Getting " + tool)
     toolNum = tools.index(tool)
@@ -49,7 +54,14 @@ def deliver_tool():
     deg = math.atan2(130,-130)
     bot.setheading(deg)
     bot.setpos(-130, 130)
-    bot.setheading(90)            
+    bot.setheading(90)
+    time.sleep(1)
+    return_to_base()
+def return_to_base():
+    deg = math.atan2(-bot.xcor(), -bot.ycor())      
+    bot.setheading(deg)        
+    bot.setpos(0,0)
+    bot.setheading(90)
 wn = turtle.Screen()
 #wn.screensize(400,400, "white")
 wn.bgpic("lab_gif.gif")
@@ -88,7 +100,8 @@ with sr.Microphone() as source:
             trigger_text = "HEY TOOLBOT"
             print(text)        
             if (trigger_word.lower() in text.lower() or "tool bot" in text.lower() or "tool box" in text.lower()):
-                activate_toolbot()
+                if(checkForTool(text) == 0):
+                    activate_toolbot()
 
         except sr.UnknownValueError:
             print("Google Speech Recognition could not understand audio")
