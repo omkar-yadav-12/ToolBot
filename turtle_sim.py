@@ -2,10 +2,13 @@ import turtle
 import time
 import speech_recognition as sr
 import math
+import random
 from difflib import SequenceMatcher
 
 tools = ["HAMMER", "WRENCH", "SCREWDRIVER", "DRILL"]
 toolPos = [[-5,-220], [-10,-185],[-22,-140],[-60,-82]]
+personPos = [[-135, 160], [-90,160], [-175,130], [-10,160]]
+personNum = random.randint(0,3)
 r = sr.Recognizer()
 r.energy_threshold = 300
 activated = False
@@ -46,19 +49,20 @@ def get_tool(tool):
     bot.setpos(toolPos[toolNum][0], toolPos[toolNum][1])
     bot.setheading(180)
     time.sleep(1)
-    bot.setheading(deg-180)
-    bot.setpos(0,0)
+    deg = math.atan2(-50 - bot.ycor(), -25 - bot.xcor()) * 180 / math.pi
+    bot.setheading(deg)
+    bot.setpos(-25,-50)
     deliver_tool()
 
 def deliver_tool():
-    deg = math.atan2(130,-130)
+    deg = math.atan2((personPos[personNum][1] - bot.ycor()), (personPos[personNum][0] - bot.xcor())) * 180 / math.pi
     bot.setheading(deg)
-    bot.setpos(-130, 130)
+    bot.setpos(personPos[personNum][0], personPos[personNum][1] - 30)
     bot.setheading(90)
     time.sleep(1)
     return_to_base()
 def return_to_base():
-    deg = math.atan2(-bot.xcor(), -bot.ycor())      
+    deg = math.atan2(-bot.ycor(), -bot.xcor()) * 180 / math.pi 
     bot.setheading(deg)        
     bot.setpos(0,0)
     bot.setheading(90)
@@ -73,7 +77,7 @@ homeBase.color("yellow")
 homeBase.resizemode("user")
 homeBase.turtlesize(1.5, 1.5, 1)
 bot = turtle.Turtle()
-bot.shape("triangle")
+bot.shape("arrow")
 bot.color("blue")
 bot.up()
 bot.speed(1)
@@ -82,8 +86,9 @@ human.hideturtle()
 human.shape("square")
 human.color("red")
 human.up()
-human.setpos(-135,160)
+human.setpos(personPos[personNum][0], personPos[personNum][1])
 human.showturtle()
+#get_tool("HAMMER")
 with sr.Microphone() as source:
     while True:
         #time.sleep(2)
